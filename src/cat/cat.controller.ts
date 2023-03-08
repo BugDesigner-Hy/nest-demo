@@ -21,6 +21,7 @@ import { Request, Response } from 'express';
 import { R } from 'src/common/R';
 import { Cat } from './Cat';
 import { CatService } from './cat.service';
+import { Roles } from 'src/decorator/roles.decorator';
 
 // interface Cat {
 //   name: string;
@@ -32,6 +33,7 @@ export class CatController {
   constructor(private catService: CatService) {}
 
   @Post()
+  @Roles('admin')
   create(
     @Body(new ValidationPipe()) cat: Cat,
     @HostParam('account') account: string,

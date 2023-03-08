@@ -6,11 +6,19 @@ import { CatModule } from './cat/cat.module';
 import { DogModule } from './dog/dog.module';
 import { fn } from './middleware/fn.middleware';
 import { LoggerMiddleware } from './middleware/logger.middleware';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './guard/roles.guard';
 
 @Module({
   imports: [CatModule, DogModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
