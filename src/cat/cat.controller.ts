@@ -1,3 +1,5 @@
+import { ValidationPipe } from './../pipe/validate.pipe';
+import { ParseIntPipe } from './../pipe/parse-int.pipe';
 import {
   Controller,
   Get,
@@ -15,7 +17,6 @@ import {
   ResponseDecoratorOptions,
   HttpException,
 } from '@nestjs/common';
-import { randomInt } from 'crypto';
 import { Request, Response } from 'express';
 import { R } from 'src/common/R';
 import { Cat } from './Cat';
@@ -31,7 +32,10 @@ export class CatController {
   constructor(private catService: CatService) {}
 
   @Post()
-  create(@Body() cat: Cat, @HostParam('account') account: string): R {
+  create(
+    @Body(new ValidationPipe()) cat: Cat,
+    @HostParam('account') account: string,
+  ): R {
     console.log(`output->Param`, cat);
     console.log(`output->account`, account);
     this.catService.create(cat);
@@ -85,7 +89,7 @@ export class CatController {
   }
 
   @Delete('/:id')
-  delete() {
+  delete(@Param('id', new ParseIntPipe()) id) {
     return '';
   }
 }
