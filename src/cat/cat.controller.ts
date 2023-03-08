@@ -14,9 +14,11 @@ import {
   HttpStatus,
   ResponseDecoratorOptions,
 } from '@nestjs/common';
+import { randomInt } from 'crypto';
 import { Request, Response } from 'express';
 import { R } from 'src/common/R';
 import { Cat } from './Cat';
+import { CatService } from './cat.service';
 
 // interface Cat {
 //   name: string;
@@ -25,11 +27,14 @@ import { Cat } from './Cat';
 
 @Controller({ host: ':account', path: 'cat' } as ControllerOptions)
 export class CatController {
-  @Post('')
-  create(@Body() param: Cat, @HostParam('account') account: string): R {
-    console.log(`output->Param`, param);
+  constructor(private catService: CatService) {}
+
+  @Post()
+  create(@Body() cat: Cat, @HostParam('account') account: string): R {
+    console.log(`output->Param`, cat);
     console.log(`output->account`, account);
-    return R.success(param);
+    this.catService.create(cat);
+    return R.success(cat);
   }
 
   @Get('/')
@@ -61,8 +66,9 @@ export class CatController {
   async getByAsync(@Query() param: Cat): Promise<R> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(R.success(param));
-      }, 2000);
+        const cats: Array<Cat> = this.catService.findAll();
+        resolve(R.success(cats));
+      }, 1000);
     });
   }
 
