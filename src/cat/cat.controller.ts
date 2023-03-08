@@ -13,6 +13,7 @@ import {
   HostParam,
   HttpStatus,
   ResponseDecoratorOptions,
+  HttpException,
 } from '@nestjs/common';
 import { randomInt } from 'crypto';
 import { Request, Response } from 'express';
@@ -60,6 +61,12 @@ export class CatController {
   getByQuery(@Query() param: Cat): object {
     console.log(`output->req.query`, param);
     return R.success(param);
+  }
+
+  @Get('/byThrowException')
+  getByThrowException(@Query() param: Cat): object {
+    console.log(`output->req.query`, param);
+    throw new HttpException('this is exception', HttpStatus.FORBIDDEN);
   }
 
   @Get('/async')
