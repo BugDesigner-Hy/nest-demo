@@ -6,8 +6,11 @@ import { CatModule } from './cat/cat.module';
 import { DogModule } from './dog/dog.module';
 import { fn } from './middleware/fn.middleware';
 import { LoggerMiddleware } from './middleware/logger.middleware';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { RolesGuard } from './guard/roles.guard';
+import { LoggingInterceptor } from './interceptor/logging.interceptor';
+import { CacheInterceptor } from './interceptor/cache.interceptor';
+import { TimeoutInterceptor } from './interceptor/timeout.interceptor';
 
 @Module({
   imports: [CatModule, DogModule],
@@ -17,6 +20,18 @@ import { RolesGuard } from './guard/roles.guard';
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: CacheInterceptor,
+    // },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TimeoutInterceptor,
     },
   ],
 })

@@ -1,3 +1,4 @@
+import { timeInterval, timeout } from 'rxjs/operators';
 import { ValidationPipe } from './../pipe/validate.pipe';
 import { ParseIntPipe } from './../pipe/parse-int.pipe';
 import {
@@ -38,6 +39,10 @@ export class CatController {
     @Body(new ValidationPipe()) cat: Cat,
     @HostParam('account') account: string,
   ): R {
+    // const timeout = 5;
+    // setTimeout(() => {
+    //   console.log(`output->timeout`, timeout, 's');
+    // }, timeout * 1000);
     console.log(`output->Param`, cat);
     console.log(`output->account`, account);
     this.catService.create(cat);
